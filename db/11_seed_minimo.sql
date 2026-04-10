@@ -1,15 +1,15 @@
 BEGIN;
 
-INSERT INTO config.parametro_sistema (clave, categoria, descripcion, valor_json, editable)
+INSERT INTO config.parametro_sistema (clave, categoria, descripcion, tipo_valor, valor_texto, editable)
 VALUES
-    ('reglas.cupo_diario_permisos', 'reglas', 'Numero maximo orientativo de permisos por dia habil.', '2'::jsonb, TRUE),
-    ('reglas.max_dias_habiles_por_docente', 'reglas', 'Maximo anual orientativo de dias habiles P.27 por docente.', '6'::jsonb, TRUE),
-    ('reglas.revisar_consecutividad_real', 'reglas', 'Marca para revision manual las solicitudes consecutivas en dias habiles reales.', 'true'::jsonb, TRUE),
-    ('reglas.letra_desempate_inicio', 'reglas', 'Letra inicial para desempate de prioridad si la normativa interna lo requiere.', '"M"'::jsonb, TRUE),
-    ('centro.nombre', 'centro', 'Nombre visible del centro.', '"IES Demo P27"'::jsonb, TRUE),
-    ('centro.codigo', 'centro', 'Codigo interno o administrativo del centro.', '"11000000"'::jsonb, TRUE),
-    ('integraciones.google_calendar_habilitado', 'integraciones', 'Activa futuras integraciones con Google Calendar.', 'false'::jsonb, TRUE),
-    ('integraciones.n8n_habilitado', 'integraciones', 'Activa futuras automatizaciones de n8n.', 'false'::jsonb, TRUE)
+    ('reglas.cupo_diario_permisos', 'reglas', 'Numero maximo orientativo de permisos por dia habil.', 'entero', '2', TRUE),
+    ('reglas.max_dias_habiles_por_docente', 'reglas', 'Maximo anual orientativo de dias habiles P.27 por docente.', 'entero', '6', TRUE),
+    ('reglas.revisar_consecutividad_real', 'reglas', 'Marca para revision manual las solicitudes consecutivas en dias habiles reales.', 'booleano', 'true', TRUE),
+    ('reglas.letra_desempate_inicio', 'reglas', 'Letra inicial para desempate de prioridad si la normativa interna lo requiere.', 'texto', 'M', TRUE),
+    ('centro.nombre', 'centro', 'Nombre visible del centro.', 'texto', 'IES Demo P27', TRUE),
+    ('centro.codigo', 'centro', 'Codigo interno o administrativo del centro.', 'texto', '11000000', TRUE),
+    ('integraciones.google_calendar_habilitado', 'integraciones', 'Activa futuras integraciones con Google Calendar.', 'booleano', 'false', TRUE),
+    ('integraciones.n8n_habilitado', 'integraciones', 'Activa futuras automatizaciones de n8n.', 'booleano', 'false', TRUE)
 ON CONFLICT (clave) DO NOTHING;
 
 INSERT INTO core.usuario (usuario_id, email, nombre_mostrar, rol_principal, proveedor_identidad, referencia_externa)

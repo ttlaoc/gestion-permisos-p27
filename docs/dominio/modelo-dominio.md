@@ -104,6 +104,12 @@ Ejemplos:
 - activacion de reglas
 - metadatos del centro
 
+Modelado MVP:
+
+- `tipo_valor` para tipado funcional simple
+- `valor_texto` para edicion administrativa desde AppSheet
+- conversion interna a JSONB solo cuando se necesita un formato tecnico uniforme
+
 ## Invariantes del dominio
 
 - cada solicitud tiene un estado actual unico

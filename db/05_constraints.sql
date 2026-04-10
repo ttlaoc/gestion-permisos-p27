@@ -5,7 +5,15 @@ ALTER TABLE config.parametro_sistema
     ADD CONSTRAINT chk_parametro_sistema_clave
         CHECK (clave ~ '^[a-z0-9_.-]+$'),
     ADD CONSTRAINT chk_parametro_sistema_categoria
-        CHECK (char_length(trim(categoria)) >= 3);
+        CHECK (char_length(trim(categoria)) >= 3),
+    ADD CONSTRAINT chk_parametro_sistema_valor_texto_no_vacio
+        CHECK (char_length(trim(valor_texto)) >= 1),
+    ADD CONSTRAINT chk_parametro_sistema_tipo_y_valor
+        CHECK (
+            tipo_valor = 'texto'
+            OR (tipo_valor = 'entero' AND trim(valor_texto) ~ '^-?[0-9]+$')
+            OR (tipo_valor = 'booleano' AND lower(trim(valor_texto)) IN ('true', 'false'))
+        );
 
 ALTER TABLE core.usuario
     ADD CONSTRAINT uq_usuario_email UNIQUE (email),

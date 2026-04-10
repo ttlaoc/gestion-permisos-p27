@@ -4,8 +4,10 @@
 
 1. Crear la base con `db/00_create_database.sql`.
 2. Ejecutar los SQL en orden.
-3. Verificar semillas y vistas.
-4. Conectar AppSheet a las vistas del esquema `appsheet`.
+3. Verificar semillas, tablas y vistas.
+4. Conectar AppSheet segun la estrategia del MVP:
+   - tablas editables: `core.docente`, `core.solicitud`, `core.calendario_no_lectivo`, `core.incidencia_solicitud`
+   - vistas de apoyo: `appsheet.vw_parametros_editables`, `appsheet.vw_revision_solicitudes`
 
 ## Verificaciones basicas
 
@@ -13,6 +15,7 @@
 - existen registros en `config.parametro_sistema`
 - una solicitud seed tiene historico de estados
 - las vistas de `appsheet` devuelven datos
+- el rol de AppSheet puede leer y escribir solo donde corresponde
 
 ## Operacion recomendada
 
@@ -30,4 +33,4 @@
 
 - si una solicitud falla en transicion, revisar `core.estado_transicion_permitida`
 - si el calculo de dias habiles no cuadra, revisar `core.calendario_no_lectivo`
-- si AppSheet no puede escribir, revisar grants y si la vista es actualizable
+- si AppSheet no puede escribir, revisar grants sobre tabla base o sobre `appsheet.vw_parametros_editables`

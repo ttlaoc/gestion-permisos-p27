@@ -10,7 +10,8 @@
 ## Fase 2: AppSheet
 
 - conectar AppSheet a PostgreSQL
-- crear vistas, slices y formularios por rol
+- conectar tablas base para escritura y vistas de apoyo para lectura
+- crear slices y formularios por rol
 - aplicar security filters
 - definir acciones y automatizaciones internas minimas
 - validar experiencia de profesorado y direccion

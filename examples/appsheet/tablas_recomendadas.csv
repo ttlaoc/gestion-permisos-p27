@@ -1,7 +1,7 @@
 tabla,key,label,modo_sugerido,uso
-appsheet.vw_docentes,docente_id,codigo_interno,lectura_escritura,Mantenimiento de docentes
-appsheet.vw_solicitudes,solicitud_id,codigo,lectura_escritura,Altas y seguimiento de solicitudes
-appsheet.vw_parametros_editables,parametro_id,clave,lectura_escritura,Configuracion funcional
-appsheet.vw_calendario_no_lectivo,calendario_no_lectivo_id,fecha,lectura_escritura,Calendario del centro
-appsheet.vw_incidencias,incidencia_id,descripcion,lectura_escritura,Incidencias de revision
+core.docente,docente_id,codigo_interno,lectura_escritura,Mantenimiento de docentes sobre tabla base
+core.solicitud,solicitud_id,codigo,lectura_escritura,Altas y seguimiento de solicitudes sobre tabla base
+appsheet.vw_parametros_editables,parametro_id,clave,lectura_escritura,Configuracion funcional administrable
+core.calendario_no_lectivo,calendario_no_lectivo_id,fecha,lectura_escritura,Calendario del centro sobre tabla base
+core.incidencia_solicitud,incidencia_id,descripcion,lectura_escritura,Incidencias de revision sobre tabla base
 appsheet.vw_revision_solicitudes,solicitud_id,codigo,solo_lectura,Panel de revision de direccion

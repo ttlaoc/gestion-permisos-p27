@@ -29,7 +29,7 @@ Responsabilidades:
 - aplicar restricciones e integridad
 - mantener historicos
 - calcular dias habiles y consecutividad real
-- exponer vistas controladas para AppSheet
+- exponer vistas de apoyo para AppSheet cuando aporten valor real
 
 Esquemas:
 
@@ -47,6 +47,12 @@ Uso previsto:
 - revision y decision por direccion
 - mantenimiento basico de calendario y configuracion por administracion
 - consulta de estado y trazabilidad resumida
+
+Estrategia tecnica del MVP:
+
+- escribir directamente sobre tablas base en operaciones simples
+- reservar vistas para joins, paneles y lectura
+- admitir como excepcion controlada la vista `appsheet.vw_parametros_editables`, porque filtra solo configuracion administrable
 
 Limites deliberados:
 
@@ -98,7 +104,7 @@ Las transiciones permitidas se guardan en tabla, no embebidas en AppSheet.
 ## Seguridad de arquitectura
 
 - Roles separados para propietario, AppSheet, automatizacion y solo lectura.
-- Vistas especificas para AppSheet.
+- Permisos de AppSheet sobre tablas base concretas y vistas de apoyo minimas.
 - Auditoria de cambios de configuracion y de estado.
 - Registro de importaciones futuras.
 - Configuracion funcional en tabla propia.
@@ -106,6 +112,5 @@ Las transiciones permitidas se guardan en tabla, no embebidas en AppSheet.
 
 ## Decisiones aplazadas
 
-- TODO: decidir si en fase 2 se usa AppSheet directo a tablas base o solo a vistas updatable.
 - TODO: decidir si conviene una API intermedia propia antes de activar acciones sensibles desde AppSheet.
 - TODO: decidir si el desempate por letra debe resolverse en SQL, en proceso de revision o en automatizacion externa.

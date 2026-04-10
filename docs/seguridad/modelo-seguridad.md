@@ -124,7 +124,7 @@ Controles:
 - historico de cambios y estados de solicitudes
 - calculos de negocio criticos en funciones SQL
 - roles de base de datos con minimo privilegio
-- vistas para AppSheet
+- AppSheet con permisos sobre tablas base concretas y vistas minimas de apoyo
 - registro de futuras importaciones externas
 
 ## Controles operativos recomendados
@@ -148,6 +148,7 @@ Controles:
 - Se evita almacenar secretos en `config.parametro_sistema`.
 - Se aplaza la subida de ficheros hasta definir controles completos.
 - Se aplaza cualquier automatizacion de escritura sobre Seneca.
+- La escritura sobre vistas AppSheet solo se admite cuando la vista reduce riesgo de forma clara; en el MVP solo aplica a `appsheet.vw_parametros_editables`.
 
 ## TODO
 

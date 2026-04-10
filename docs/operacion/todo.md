@@ -11,6 +11,9 @@
   - tamano maximo
   - escaneo
   - retencion
-- Decidir si AppSheet escribira en tablas/vistas directamente o mediante backend futuro.
+- Validar en pruebas reales la estrategia elegida para AppSheet:
+  - tablas base para escritura simple
+  - `appsheet.vw_parametros_editables` como unica vista editable justificada
+  - `appsheet.vw_revision_solicitudes` como vista de solo lectura
 - Definir estrategia de autenticacion real de usuarios.
 - Definir politica de backup, retencion y borrado.

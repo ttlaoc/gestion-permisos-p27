@@ -15,6 +15,6 @@ Dar continuidad al proyecto sin perder las decisiones base del MVP.
 ## Siguiente foco recomendado
 
 1. validar el dominio con personas del centro
-2. conectar AppSheet a las vistas
+2. conectar AppSheet a tablas base y vistas de apoyo segun la estrategia MVP
 3. probar transiciones reales y permisos por rol
 4. ajustar seeds y parametros al curso real

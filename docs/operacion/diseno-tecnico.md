@@ -7,7 +7,7 @@ El MVP es database-first. La prioridad es fijar un modelo estable y seguro antes
 ## Artefactos principales
 
 - SQL ordenado por fases
-- vistas para AppSheet
+- tablas base y vistas de apoyo para AppSheet
 - roles de base de datos
 - semillas de ejemplo
 - script PowerShell para aplicar el esquema
@@ -30,7 +30,9 @@ El MVP es database-first. La prioridad es fijar un modelo estable y seguro antes
 
 ## Consideraciones AppSheet
 
-- empezar por vistas simples y actualizables
+- editar tablas base cuando la operacion sea simple y segura
+- usar vistas solo para lectura, joins y paneles
+- mantener como unica excepcion editable `appsheet.vw_parametros_editables`, porque filtra las filas administrables
 - evitar logica compleja en formulas si ya existe en SQL
 - usar `version_registro` para ayudar a detectar concurrencia y refresco
 - aplicar security filters y slices por rol

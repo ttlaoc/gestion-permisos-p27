@@ -1,5 +1,11 @@
 BEGIN;
 
+CREATE TYPE config.parametro_tipo_valor_enum AS ENUM (
+    'texto',
+    'entero',
+    'booleano'
+);
+
 CREATE TYPE core.rol_usuario_enum AS ENUM (
     'profesorado',
     'direccion',

@@ -64,15 +64,47 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION core.fn_parametro_a_jsonb(
+    p_tipo_valor config.parametro_tipo_valor_enum,
+    p_valor_texto TEXT
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+IMMUTABLE
+AS $$
+BEGIN
+    CASE p_tipo_valor
+        WHEN 'entero' THEN
+            RETURN to_jsonb(trim(p_valor_texto)::INTEGER);
+        WHEN 'booleano' THEN
+            RETURN to_jsonb(lower(trim(p_valor_texto))::BOOLEAN);
+        ELSE
+            RETURN to_jsonb(p_valor_texto);
+    END CASE;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION core.fn_obtener_parametro_json(p_clave TEXT)
 RETURNS JSONB
-LANGUAGE sql
+LANGUAGE plpgsql
 STABLE
 AS $$
-    SELECT valor_json
+DECLARE
+    v_tipo config.parametro_tipo_valor_enum;
+    v_valor_texto TEXT;
+BEGIN
+    SELECT tipo_valor, valor_texto
+    INTO v_tipo, v_valor_texto
     FROM config.parametro_sistema
     WHERE clave = p_clave
     LIMIT 1;
+
+    IF v_tipo IS NULL THEN
+        RETURN NULL;
+    END IF;
+
+    RETURN core.fn_parametro_a_jsonb(v_tipo, v_valor_texto);
+END;
 $$;
 
 CREATE OR REPLACE FUNCTION core.fn_obtener_parametro_entero(p_clave TEXT, p_default INTEGER)
@@ -388,7 +420,7 @@ BEGIN
             NULL,
             NEW.version,
             NULL,
-            NEW.valor_json,
+            core.fn_parametro_a_jsonb(NEW.tipo_valor, NEW.valor_texto),
             audit.fn_actor_usuario_id(),
             audit.fn_origen_evento()
         );
@@ -414,8 +446,8 @@ BEGIN
         NEW.clave,
         OLD.version,
         NEW.version,
-        OLD.valor_json,
-        NEW.valor_json,
+        core.fn_parametro_a_jsonb(OLD.tipo_valor, OLD.valor_texto),
+        core.fn_parametro_a_jsonb(NEW.tipo_valor, NEW.valor_texto),
         audit.fn_actor_usuario_id(),
         audit.fn_origen_evento()
     );
