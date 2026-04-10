@@ -8,7 +8,7 @@ fecha_fin,Date,Si,Fin del permiso
 motivo,LongText,Si,Descripcion breve
 observaciones_docente,LongText,Si,Comentarios del docente
 observaciones_direccion,LongText,Si,Comentarios de revision
-estado_actual,Enum,Si,Controlar segun rol y accion
+estado_actual,Enum,Si,Controlar segun rol y accion con lista dependiente del estado y del rol
 dias_habiles_solicitados,Number,No,Calculado en SQL
 es_consecutiva_real,Yes/No,No,Calculado en SQL
 requiere_revision_manual,Yes/No,No,Calculado en SQL

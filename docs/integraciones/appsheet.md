@@ -42,6 +42,40 @@ La estrategia elegida es:
 - direccion: acceso a revision, incidencias y decisiones
 - administracion: acceso a parametros, calendario y marcaje de Seneca
 
+## Estados por rol en AppSheet
+
+Estados asignables por profesorado:
+
+- `borrador`
+- `enviada`
+- `cancelada`
+
+Estados asignables por direccion:
+
+- `validada_automatica`
+- `requiere_revision`
+- `pendiente_subsanacion`
+- `autorizada_para_seneca`
+- `denegada`
+
+Estados asignables por administracion:
+
+- `presentada_en_seneca`
+- `aceptada`
+- `denegada`
+- `cerrada`
+
+Estados preferiblemente asignados por automatizacion:
+
+- `validada_automatica`
+- `requiere_revision`
+
+Notas:
+
+- AppSheet debe limitar las opciones visibles por rol con slices o valid if
+- la base de datos sigue siendo quien decide si una transicion es valida o no
+- `vw_revision_solicitudes` es la vista recomendada para paneles de direccion
+
 ## Recomendaciones tecnicas
 
 - usar una cuenta de base de datos dedicada a AppSheet

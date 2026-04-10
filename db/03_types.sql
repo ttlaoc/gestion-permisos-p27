@@ -18,13 +18,13 @@ CREATE TYPE core.rol_usuario_enum AS ENUM (
 CREATE TYPE core.estado_solicitud_enum AS ENUM (
     'borrador',
     'enviada',
-    'en_revision',
+    'validada_automatica',
+    'requiere_revision',
     'pendiente_subsanacion',
-    'validada_interna',
-    'autorizada_direccion',
-    'denegada_direccion',
-    'incidencia_detectada',
-    'presentada_seneca',
+    'autorizada_para_seneca',
+    'presentada_en_seneca',
+    'aceptada',
+    'denegada',
     'cerrada',
     'cancelada'
 );

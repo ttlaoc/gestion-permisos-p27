@@ -60,6 +60,72 @@ Reglas relevantes:
 - la consecutividad real ignora dias no habiles
 - una solicitud puede requerir revision manual sin quedar denegada
 
+### Maquina de estados de solicitud
+
+Estados operativos:
+
+- `borrador`
+- `enviada`
+- `validada_automatica`
+- `requiere_revision`
+- `pendiente_subsanacion`
+- `autorizada_para_seneca`
+- `presentada_en_seneca`
+- `aceptada`
+- `denegada`
+- `cerrada`
+- `cancelada`
+
+Lectura funcional recomendada:
+
+- `borrador`: aun editable por profesorado
+- `enviada`: entregada y pendiente de clasificacion inicial
+- `validada_automatica`: no ha saltado ninguna alerta automatica relevante
+- `requiere_revision`: necesita revision humana antes de decidir
+- `pendiente_subsanacion`: faltan datos o aclaraciones
+- `autorizada_para_seneca`: validada internamente y lista para el paso oficial
+- `presentada_en_seneca`: ya registrada en Seneca
+- `aceptada`: resultado favorable tras presentacion
+- `denegada`: resultado desfavorable
+- `cerrada`: expediente finalizado sin mas gestion interna
+- `cancelada`: retirada por profesorado antes del cierre del flujo
+
+Transiciones validas del MVP:
+
+| Origen | Destino | Rol habitual |
+|---|---|---|
+| `borrador` | `enviada` | profesorado |
+| `borrador` | `cancelada` | profesorado |
+| `enviada` | `validada_automatica` | automatizacion o direccion |
+| `enviada` | `requiere_revision` | automatizacion o direccion |
+| `enviada` | `cancelada` | profesorado |
+| `validada_automatica` | `pendiente_subsanacion` | direccion |
+| `validada_automatica` | `autorizada_para_seneca` | direccion |
+| `validada_automatica` | `denegada` | direccion |
+| `requiere_revision` | `pendiente_subsanacion` | direccion |
+| `requiere_revision` | `autorizada_para_seneca` | direccion |
+| `requiere_revision` | `denegada` | direccion |
+| `pendiente_subsanacion` | `enviada` | profesorado |
+| `pendiente_subsanacion` | `cancelada` | profesorado |
+| `autorizada_para_seneca` | `presentada_en_seneca` | administracion |
+| `presentada_en_seneca` | `aceptada` | administracion |
+| `presentada_en_seneca` | `denegada` | administracion |
+| `presentada_en_seneca` | `cerrada` | administracion |
+
+Estados terminales del MVP:
+
+- `aceptada`
+- `denegada`
+- `cerrada`
+- `cancelada`
+
+Reglas reforzadas en base de datos:
+
+- no se permiten saltos de estado fuera de la tabla `core.estado_transicion_permitida`
+- no se puede pasar a `presentada_en_seneca` sin venir de `autorizada_para_seneca`
+- no se puede pasar a `aceptada` o `denegada` sin venir de `presentada_en_seneca`
+- una solicitud en estado terminal no admite mas cambios
+
 ### Historial de estados
 
 Registra todas las transiciones de estado, incluido el alta inicial.
@@ -70,6 +136,15 @@ Uso:
 - auditoria
 - investigacion de incidencias
 - analitica futura
+
+Campos relevantes:
+
+- `solicitud_id`
+- `estado_anterior`
+- `estado_nuevo`
+- `actor_usuario_id`
+- `actor_rol`
+- `creado_en`
 
 ### Incidencia de solicitud
 

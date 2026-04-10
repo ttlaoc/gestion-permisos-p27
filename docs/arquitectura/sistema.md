@@ -78,10 +78,10 @@ Uso futuro:
 
 1. Un docente crea una pre-solicitud.
 2. La solicitud pasa de `borrador` a `enviada`.
-3. Direccion revisa y mueve a `en_revision`.
-4. Direccion puede autorizar, denegar o marcar incidencia.
+3. Automatizacion o direccion la clasifica como `validada_automatica` o `requiere_revision`.
+4. Direccion decide si pide subsanacion, autoriza para Seneca o deniega.
 5. Administracion registra la presentacion en Seneca cuando proceda.
-6. La solicitud se cierra cuando el ciclo interno queda completado.
+6. La solicitud termina en `aceptada`, `denegada`, `cerrada` o `cancelada`.
 
 ## Maquina de estados
 
@@ -89,17 +89,24 @@ Estados base:
 
 - `borrador`
 - `enviada`
-- `en_revision`
+- `validada_automatica`
+- `requiere_revision`
 - `pendiente_subsanacion`
-- `validada_interna`
-- `autorizada_direccion`
-- `denegada_direccion`
-- `incidencia_detectada`
-- `presentada_seneca`
+- `autorizada_para_seneca`
+- `presentada_en_seneca`
+- `aceptada`
+- `denegada`
 - `cerrada`
 - `cancelada`
 
 Las transiciones permitidas se guardan en tabla, no embebidas en AppSheet.
+
+Estados terminales:
+
+- `aceptada`
+- `denegada`
+- `cerrada`
+- `cancelada`
 
 ## Seguridad de arquitectura
 

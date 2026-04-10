@@ -35,6 +35,16 @@ BEFORE INSERT OR UPDATE ON core.solicitud
 FOR EACH ROW
 EXECUTE FUNCTION core.fn_touch_solicitud();
 
+CREATE TRIGGER trg_solicitud_validar_estado_inicial
+BEFORE INSERT ON core.solicitud
+FOR EACH ROW
+EXECUTE FUNCTION core.fn_validar_estado_inicial_solicitud();
+
+CREATE TRIGGER trg_solicitud_bloquear_edicion_final
+BEFORE UPDATE ON core.solicitud
+FOR EACH ROW
+EXECUTE FUNCTION core.fn_bloquear_edicion_solicitud_final();
+
 CREATE TRIGGER trg_solicitud_validar_estado
 BEFORE UPDATE OF estado_actual ON core.solicitud
 FOR EACH ROW

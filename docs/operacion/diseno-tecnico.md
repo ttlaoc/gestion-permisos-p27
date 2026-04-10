@@ -37,6 +37,37 @@ El MVP es database-first. La prioridad es fijar un modelo estable y seguro antes
 - usar `version_registro` para ayudar a detectar concurrencia y refresco
 - aplicar security filters y slices por rol
 
+## Maquina de estados de solicitudes
+
+La logica critica del estado vive en PostgreSQL mediante:
+
+- `core.estado_solicitud_enum`
+- `core.estado_transicion_permitida`
+- `core.fn_validar_transicion_estado()`
+- `core.fn_bloquear_edicion_solicitud_final()`
+- trigger `trg_solicitud_validar_estado`
+- trigger `trg_solicitud_bloquear_edicion_final`
+- trigger `trg_solicitud_historial_estado`
+
+Flujo base del MVP:
+
+| Fase | Estados |
+|---|---|
+| Preparacion | `borrador`, `enviada` |
+| Clasificacion inicial | `validada_automatica`, `requiere_revision` |
+| Revision humana | `pendiente_subsanacion`, `autorizada_para_seneca`, `denegada` |
+| Tramite oficial | `presentada_en_seneca` |
+| Cierre | `aceptada`, `denegada`, `cerrada`, `cancelada` |
+
+Controles minimos implementados:
+
+- no hay cambios a estados no definidos por enum
+- no hay transiciones fuera de la tabla de transiciones
+- `presentada_en_seneca` solo puede venir de `autorizada_para_seneca`
+- `aceptada` y `denegada` solo pueden venir de `presentada_en_seneca`
+- una solicitud en estado terminal no admite mas cambios
+- todo cambio de estado se registra automaticamente en auditoria
+
 ## Consideraciones n8n
 
 - flujos idempotentes

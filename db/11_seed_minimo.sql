@@ -65,16 +65,21 @@ ON CONFLICT (codigo_interno) DO NOTHING;
 INSERT INTO core.estado_transicion_permitida (estado_origen, estado_destino, rol_requerido, requiere_comentario)
 VALUES
     ('borrador', 'enviada', 'profesorado', FALSE),
-    ('enviada', 'en_revision', 'direccion', FALSE),
-    ('en_revision', 'pendiente_subsanacion', 'direccion', TRUE),
+    ('enviada', 'validada_automatica', 'automatizacion', FALSE),
+    ('enviada', 'validada_automatica', 'direccion', FALSE),
+    ('enviada', 'requiere_revision', 'automatizacion', FALSE),
+    ('enviada', 'requiere_revision', 'direccion', FALSE),
+    ('validada_automatica', 'pendiente_subsanacion', 'direccion', TRUE),
     ('pendiente_subsanacion', 'enviada', 'profesorado', FALSE),
-    ('en_revision', 'validada_interna', 'direccion', FALSE),
-    ('validada_interna', 'autorizada_direccion', 'direccion', FALSE),
-    ('validada_interna', 'denegada_direccion', 'direccion', TRUE),
-    ('en_revision', 'incidencia_detectada', 'direccion', TRUE),
-    ('incidencia_detectada', 'en_revision', 'direccion', FALSE),
-    ('autorizada_direccion', 'presentada_seneca', 'administracion', FALSE),
-    ('presentada_seneca', 'cerrada', 'administracion', FALSE),
+    ('validada_automatica', 'autorizada_para_seneca', 'direccion', FALSE),
+    ('validada_automatica', 'denegada', 'direccion', TRUE),
+    ('requiere_revision', 'pendiente_subsanacion', 'direccion', TRUE),
+    ('requiere_revision', 'autorizada_para_seneca', 'direccion', FALSE),
+    ('requiere_revision', 'denegada', 'direccion', TRUE),
+    ('autorizada_para_seneca', 'presentada_en_seneca', 'administracion', FALSE),
+    ('presentada_en_seneca', 'aceptada', 'administracion', FALSE),
+    ('presentada_en_seneca', 'denegada', 'administracion', TRUE),
+    ('presentada_en_seneca', 'cerrada', 'administracion', FALSE),
     ('borrador', 'cancelada', 'profesorado', FALSE),
     ('enviada', 'cancelada', 'profesorado', TRUE),
     ('pendiente_subsanacion', 'cancelada', 'profesorado', TRUE)
@@ -121,7 +126,7 @@ SELECT set_config('app.actor_usuario_id', '11111111-1111-1111-1111-111111111111'
 SELECT set_config('app.actor_rol', 'direccion', TRUE);
 
 UPDATE core.solicitud
-SET estado_actual = 'en_revision',
+SET estado_actual = 'requiere_revision',
     revisada_por_usuario_id = '11111111-1111-1111-1111-111111111111',
     observaciones_direccion = 'Revision inicial realizada.'
 WHERE solicitud_id = 'cccccccc-cccc-cccc-cccc-cccccccccccc';

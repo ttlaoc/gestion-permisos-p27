@@ -238,7 +238,7 @@ BEGIN
         FROM core.solicitud s
         WHERE s.docente_id = p_docente_id
           AND s.solicitud_id IS DISTINCT FROM p_excluir_solicitud_id
-          AND s.estado_actual NOT IN ('cancelada', 'denegada_direccion')
+          AND s.estado_actual NOT IN ('cancelada', 'denegada')
           AND (
               v_fecha_previa BETWEEN s.fecha_inicio AND s.fecha_fin
               OR v_fecha_siguiente BETWEEN s.fecha_inicio AND s.fecha_fin
@@ -272,11 +272,13 @@ BEGIN
               WHERE s.solicitud_id IS DISTINCT FROM p_excluir_solicitud_id
                 AND s.estado_actual IN (
                     'enviada',
-                    'en_revision',
+                    'validada_automatica',
+                    'requiere_revision',
                     'pendiente_subsanacion',
-                    'validada_interna',
-                    'autorizada_direccion',
-                    'presentada_seneca'
+                    'autorizada_para_seneca',
+                    'presentada_en_seneca',
+                    'aceptada',
+                    'cerrada'
                 )
                 AND g.fecha::DATE BETWEEN s.fecha_inicio AND s.fecha_fin
           ) >= v_cupo
@@ -307,11 +309,12 @@ BEGIN
       AND s.solicitud_id IS DISTINCT FROM p_excluir_solicitud_id
       AND s.estado_actual IN (
           'enviada',
-          'en_revision',
+          'validada_automatica',
+          'requiere_revision',
           'pendiente_subsanacion',
-          'validada_interna',
-          'autorizada_direccion',
-          'presentada_seneca',
+          'autorizada_para_seneca',
+          'presentada_en_seneca',
+          'aceptada',
           'cerrada'
       )
       AND EXTRACT(YEAR FROM s.fecha_inicio) = EXTRACT(YEAR FROM p_fecha_inicio);
@@ -365,6 +368,44 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION core.fn_validar_estado_inicial_solicitud()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.estado_actual NOT IN ('borrador', 'enviada') THEN
+        RAISE EXCEPTION 'Estado inicial no permitido para la solicitud: %', NEW.estado_actual
+            USING ERRCODE = '23514';
+    END IF;
+
+    RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION core.fn_estado_solicitud_es_bloqueado_para_edicion(
+    p_estado core.estado_solicitud_enum
+)
+RETURNS BOOLEAN
+LANGUAGE sql
+IMMUTABLE
+AS $$
+    SELECT p_estado IN ('aceptada', 'denegada', 'cerrada', 'cancelada');
+$$;
+
+CREATE OR REPLACE FUNCTION core.fn_bloquear_edicion_solicitud_final()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF core.fn_estado_solicitud_es_bloqueado_para_edicion(OLD.estado_actual) THEN
+        RAISE EXCEPTION 'No se puede modificar una solicitud en estado final: %', OLD.estado_actual
+            USING ERRCODE = '23514';
+    END IF;
+
+    RETURN NEW;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION core.fn_validar_transicion_estado()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -378,6 +419,23 @@ BEGIN
 
     IF NEW.estado_actual = OLD.estado_actual THEN
         RETURN NEW;
+    END IF;
+
+    IF core.fn_estado_solicitud_es_bloqueado_para_edicion(OLD.estado_actual) THEN
+        RAISE EXCEPTION 'No se permiten transiciones desde un estado final: %', OLD.estado_actual
+            USING ERRCODE = '23514';
+    END IF;
+
+    IF NEW.estado_actual = 'presentada_en_seneca'
+       AND OLD.estado_actual <> 'autorizada_para_seneca' THEN
+        RAISE EXCEPTION 'Solo se puede pasar a presentada_en_seneca desde autorizada_para_seneca'
+            USING ERRCODE = '23514';
+    END IF;
+
+    IF NEW.estado_actual IN ('aceptada', 'denegada')
+       AND OLD.estado_actual <> 'presentada_en_seneca' THEN
+        RAISE EXCEPTION 'Solo se puede pasar a % desde presentada_en_seneca', NEW.estado_actual
+            USING ERRCODE = '23514';
     END IF;
 
     v_actor_rol := audit.fn_actor_rol();
