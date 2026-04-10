@@ -36,7 +36,7 @@ El MVP cubre la capa de datos, reglas base, auditoria y documentación. La inter
 2. Ejecutar los scripts `01` a `11` en orden.
 3. Revisar y adaptar los parámetros de `config.parametro_sistema`.
 4. Conectar AppSheet a las tablas base y vistas previstas para el MVP:
-   - edición directa: `core.docente`, `core.solicitud`, `core.calendario_no_lectivo`, `core.incidencia_solicitud`
+   - edición directa: `config.parametro_sistema`, `core.docente`, `core.solicitud`, `core.calendario_no_lectivo`, `core.incidencia_solicitud`
    - vistas de apoyo: `appsheet.vw_parametros_editables`, `appsheet.vw_revision_solicitudes`
 
 ### Opción 2: Docker Compose
@@ -83,5 +83,5 @@ El MVP cubre la capa de datos, reglas base, auditoria y documentación. La inter
 ## Estrategia AppSheet del MVP
 
 - AppSheet edita tablas base cuando la operación es simple y la integridad queda reforzada en PostgreSQL.
-- Las vistas del esquema `appsheet` se reservan para lectura y apoyo visual, salvo `vw_parametros_editables`, que se mantiene como vista editable justificada para filtrar solo parámetros administrables.
+- Las vistas del esquema `appsheet` se reservan para lectura y apoyo visual.
 - No se plantea una capa de triggers `INSTEAD OF` en esta fase.

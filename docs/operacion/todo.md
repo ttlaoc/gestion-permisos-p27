@@ -13,7 +13,7 @@
   - retencion
 - Validar en pruebas reales la estrategia elegida para AppSheet:
   - tablas base para escritura simple
-  - `appsheet.vw_parametros_editables` como unica vista editable justificada
+  - `config.parametro_sistema` como tabla base de configuracion editable
   - `appsheet.vw_revision_solicitudes` como vista de solo lectura
 - Definir estrategia de autenticacion real de usuarios.
 - Definir politica de backup, retencion y borrado.

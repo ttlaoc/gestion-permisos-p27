@@ -36,6 +36,24 @@ GRANT USAGE ON SCHEMA appsheet TO gp27_readonly;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA config, core TO gp27_appsheet;
 
 GRANT SELECT (
+    parametro_id,
+    clave,
+    categoria,
+    descripcion,
+    tipo_valor,
+    valor_texto,
+    editable,
+    version,
+    actualizado_por,
+    actualizado_en,
+    creado_en
+) ON config.parametro_sistema TO gp27_appsheet;
+GRANT UPDATE (
+    tipo_valor,
+    valor_texto
+) ON config.parametro_sistema TO gp27_appsheet;
+
+GRANT SELECT (
     docente_id,
     usuario_id,
     codigo_interno,
@@ -195,7 +213,6 @@ GRANT UPDATE (
 ) ON core.incidencia_solicitud TO gp27_appsheet;
 
 GRANT SELECT ON appsheet.vw_parametros_editables TO gp27_appsheet;
-GRANT UPDATE (valor_texto) ON appsheet.vw_parametros_editables TO gp27_appsheet;
 GRANT SELECT ON appsheet.vw_revision_solicitudes TO gp27_appsheet, gp27_readonly;
 
 -- Automatizacion: sin escritura operativa en entidades de AppSheet.

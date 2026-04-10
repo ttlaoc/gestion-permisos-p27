@@ -74,10 +74,12 @@ IMMUTABLE
 AS $$
 BEGIN
     CASE p_tipo_valor
-        WHEN 'entero' THEN
+        WHEN 'numero' THEN
             RETURN to_jsonb(trim(p_valor_texto)::INTEGER);
         WHEN 'booleano' THEN
             RETURN to_jsonb(lower(trim(p_valor_texto))::BOOLEAN);
+        WHEN 'fecha' THEN
+            RETURN to_jsonb(trim(p_valor_texto)::DATE);
         ELSE
             RETURN to_jsonb(p_valor_texto);
     END CASE;

@@ -6,7 +6,7 @@
 2. Ejecutar los SQL en orden.
 3. Verificar semillas, tablas y vistas.
 4. Conectar AppSheet segun la estrategia del MVP:
-   - tablas editables: `core.docente`, `core.solicitud`, `core.calendario_no_lectivo`, `core.incidencia_solicitud`
+   - tablas editables: `config.parametro_sistema`, `core.docente`, `core.solicitud`, `core.calendario_no_lectivo`, `core.incidencia_solicitud`
    - vistas de apoyo: `appsheet.vw_parametros_editables`, `appsheet.vw_revision_solicitudes`
 
 ## Verificaciones basicas
@@ -33,4 +33,4 @@
 
 - si una solicitud falla en transicion, revisar `core.estado_transicion_permitida`
 - si el calculo de dias habiles no cuadra, revisar `core.calendario_no_lectivo`
-- si AppSheet no puede escribir, revisar grants sobre tabla base o sobre `appsheet.vw_parametros_editables`
+- si AppSheet no puede escribir, revisar grants sobre tabla base

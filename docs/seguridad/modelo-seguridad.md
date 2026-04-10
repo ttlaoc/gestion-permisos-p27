@@ -148,7 +148,7 @@ Controles:
 - Se evita almacenar secretos en `config.parametro_sistema`.
 - Se aplaza la subida de ficheros hasta definir controles completos.
 - Se aplaza cualquier automatizacion de escritura sobre Seneca.
-- La escritura sobre vistas AppSheet solo se admite cuando la vista reduce riesgo de forma clara; en el MVP solo aplica a `appsheet.vw_parametros_editables`.
+- En el MVP no se admite escritura sobre vistas AppSheet; la escritura se hace sobre tablas base con permisos acotados.
 
 ## TODO
 

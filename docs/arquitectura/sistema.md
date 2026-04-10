@@ -52,7 +52,7 @@ Estrategia tecnica del MVP:
 
 - escribir directamente sobre tablas base en operaciones simples
 - reservar vistas para joins, paneles y lectura
-- admitir como excepcion controlada la vista `appsheet.vw_parametros_editables`, porque filtra solo configuracion administrable
+- editar tambien la configuracion simple sobre su tabla base `config.parametro_sistema`
 
 Limites deliberados:
 

@@ -18,8 +18,7 @@ SELECT
     version,
     actualizado_en
 FROM config.parametro_sistema
-WHERE editable = TRUE
-WITH LOCAL CHECK OPTION;
+WHERE editable = TRUE;
 
 CREATE OR REPLACE VIEW appsheet.vw_revision_solicitudes AS
 SELECT
@@ -44,7 +43,7 @@ FROM core.solicitud s
 JOIN core.docente d ON d.docente_id = s.docente_id;
 
 COMMENT ON VIEW appsheet.vw_parametros_editables IS
-'Vista editable justificada para AppSheet: filtra solo parametros marcados como editables y expone valores escalares aptos para el MVP.';
+'Vista de solo lectura para AppSheet: lista parametros marcados como editables y sirve de apoyo visual o panel administrativo.';
 
 COMMENT ON VIEW appsheet.vw_revision_solicitudes IS
 'Vista de solo lectura para AppSheet orientada a revision y paneles; no debe usarse para escritura.';

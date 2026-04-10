@@ -11,8 +11,12 @@ ALTER TABLE config.parametro_sistema
     ADD CONSTRAINT chk_parametro_sistema_tipo_y_valor
         CHECK (
             tipo_valor = 'texto'
-            OR (tipo_valor = 'entero' AND trim(valor_texto) ~ '^-?[0-9]+$')
+            OR (tipo_valor = 'numero' AND trim(valor_texto) ~ '^-?[0-9]+$')
             OR (tipo_valor = 'booleano' AND lower(trim(valor_texto)) IN ('true', 'false'))
+            OR (
+                tipo_valor = 'fecha'
+                AND to_char(to_date(trim(valor_texto), 'YYYY-MM-DD'), 'YYYY-MM-DD') = trim(valor_texto)
+            )
         );
 
 ALTER TABLE core.usuario

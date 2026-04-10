@@ -32,7 +32,7 @@ El MVP es database-first. La prioridad es fijar un modelo estable y seguro antes
 
 - editar tablas base cuando la operacion sea simple y segura
 - usar vistas solo para lectura, joins y paneles
-- mantener como unica excepcion editable `appsheet.vw_parametros_editables`, porque filtra las filas administrables
+- editar `config.parametro_sistema` directamente para evitar ambiguedad y no depender de vistas escribibles
 - evitar logica compleja en formulas si ya existe en SQL
 - usar `version_registro` para ayudar a detectar concurrencia y refresco
 - aplicar security filters y slices por rol

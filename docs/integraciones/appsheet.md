@@ -8,12 +8,13 @@ La estrategia elegida es:
 
 - editar tablas base cuando la escritura es simple, directa y segura
 - usar vistas principalmente para lectura, joins, paneles y apoyo visual
-- admitir solo una vista editable justificada: `appsheet.vw_parametros_editables`
+- no usar vistas como punto de escritura del MVP
 
 ## Objetos a conectar
 
 ### Edicion directa sobre tablas base
 
+- `config.parametro_sistema`
 - `core.docente`
 - `core.solicitud`
 - `core.calendario_no_lectivo`
@@ -21,7 +22,7 @@ La estrategia elegida es:
 
 ### Vistas de AppSheet
 
-- `appsheet.vw_parametros_editables` - editable de forma controlada
+- `appsheet.vw_parametros_editables` - solo lectura
 - `appsheet.vw_revision_solicitudes` - solo lectura
 
 ## Clasificacion de las vistas revisadas
@@ -32,7 +33,7 @@ La estrategia elegida es:
 | `appsheet.vw_solicitudes` | eliminada | duplicaba `core.solicitud`; la logica critica ya vive en triggers y funciones sobre la tabla base |
 | `appsheet.vw_calendario_no_lectivo` | eliminada | mantenimiento simple y seguro directamente sobre `core.calendario_no_lectivo` |
 | `appsheet.vw_incidencias` | eliminada | entidad operativa simple; conviene editar `core.incidencia_solicitud` |
-| `appsheet.vw_parametros_editables` | editable justificada | filtra `editable = true`, evita exponer parametros no administrables y usa `valor_texto` apto para AppSheet |
+| `appsheet.vw_parametros_editables` | solo lectura | filtra `editable = true` y sirve como apoyo visual o panel administrativo |
 | `appsheet.vw_revision_solicitudes` | solo lectura | join de apoyo visual para revision; no debe utilizarse para escritura |
 
 ## Recomendacion por rol
@@ -61,7 +62,7 @@ La estrategia elegida es:
 
 Para el MVP se ha sustituido el uso directo de `valor_json` por un modelo mas simple en `config.parametro_sistema`:
 
-- `tipo_valor`: `texto`, `entero` o `booleano`
+- `tipo_valor`: `numero`, `booleano`, `texto` o `fecha`
 - `valor_texto`: valor editable desde AppSheet
 
 La base de datos convierte internamente ese valor a JSONB cuando hace falta para funciones de lectura tecnica y auditoria. Con esto:
@@ -73,6 +74,6 @@ La base de datos convierte internamente ese valor a JSONB cuando hace falta para
 ## Advertencias
 
 - `vw_revision_solicitudes` es expresamente de solo lectura
-- `vw_parametros_editables` es la unica vista pensada para escritura y queda justificada por su filtro `editable = true`
+- `vw_parametros_editables` tambien es de solo lectura; la edicion real de configuracion se hace sobre `config.parametro_sistema`
 - si AppSheet necesita escritura compleja, valorar backend intermedio
 - no habilitar adjuntos hasta cerrar la politica de seguridad
