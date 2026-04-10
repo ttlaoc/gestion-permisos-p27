@@ -20,10 +20,17 @@ BEGIN
 END
 $$;
 
+-- Limpieza defensiva para evitar arrastrar grants de iteraciones previas del MVP.
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA core, config, integration, appsheet
+FROM gp27_appsheet, gp27_automation, gp27_readonly;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA config, core
+FROM gp27_appsheet, gp27_automation, gp27_readonly;
+
 GRANT USAGE ON SCHEMA config, core, audit, integration, appsheet TO gp27_owner;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA config, core, audit, integration TO gp27_owner;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA config, core TO gp27_owner;
 
+-- AppSheet: escritura directa solo en tablas base operativas y lectura en vistas de apoyo.
 GRANT USAGE ON SCHEMA config, core, appsheet TO gp27_appsheet;
 GRANT USAGE ON SCHEMA appsheet TO gp27_readonly;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA config, core TO gp27_appsheet;
@@ -191,6 +198,7 @@ GRANT SELECT ON appsheet.vw_parametros_editables TO gp27_appsheet;
 GRANT UPDATE (valor_texto) ON appsheet.vw_parametros_editables TO gp27_appsheet;
 GRANT SELECT ON appsheet.vw_revision_solicitudes TO gp27_appsheet, gp27_readonly;
 
+-- Automatizacion: sin escritura operativa en entidades de AppSheet.
 GRANT USAGE ON SCHEMA integration TO gp27_automation;
 GRANT SELECT, INSERT, UPDATE ON integration.carga_externa TO gp27_automation;
 GRANT SELECT ON appsheet.vw_revision_solicitudes TO gp27_automation;
@@ -207,6 +215,7 @@ GRANT SELECT (
     actualizada_en
 ) ON core.solicitud TO gp27_automation;
 
+-- Solo lectura: vistas de apoyo aptas para consulta y paneles.
 GRANT SELECT ON appsheet.vw_parametros_editables TO gp27_readonly;
 
 COMMIT;
