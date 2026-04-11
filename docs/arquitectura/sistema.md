@@ -1,23 +1,23 @@
-# Arquitectura del sistema
+﻿# Arquitectura del sistema
 
-## Vision general
+## Visión general
 
 El sistema se plantea como una arquitectura de capas simples y robustas:
 
 1. PostgreSQL como fuente de verdad del dominio.
-2. AppSheet como interfaz de captura, revision y consulta.
-3. n8n como capa futura de automatizacion y orquestacion.
-4. Google Calendar como integracion futura de salida.
-5. Seneca como sistema oficial externo, fuera del perimetro de escritura automatica en esta fase.
+2. AppSheet como interfaz de captura, revisión y consulta.
+3. n8n como capa futura de automatización y orquestación.
+4. Google Calendar como integración futura de salida.
+5. Séneca como sistema oficial externo, fuera del perímetro de escritura automática en esta fase.
 
 ## Principios
 
 - Seguridad por defecto.
 - Defensa en profundidad.
-- Minimo privilegio.
+- Mínimo privilegio.
 - Trazabilidad completa de acciones sensibles.
-- Reglas de negocio criticas reforzadas en base de datos.
-- Separacion entre datos operativos, configuracion, auditoria e integraciones.
+- Reglas de negocio críticas reforzadas en base de datos.
+- Separación entre datos operativos, configuración, auditoría e integraciones.
 
 ## Componentes
 
@@ -27,63 +27,64 @@ Responsabilidades:
 
 - persistir el dominio
 - aplicar restricciones e integridad
-- mantener historicos
-- calcular dias habiles y consecutividad real
+- mantener históricos
+- calcular días hábiles y consecutividad real
 - exponer vistas de apoyo para AppSheet cuando aporten valor real
 
 Esquemas:
 
-- `config`: parametros funcionales editables
+- `config`: parámetros funcionales editables
 - `core`: entidades operativas
-- `audit`: auditoria e historicos
+- `audit`: auditoría e históricos
 - `integration`: importaciones y conciliaciones
-- `appsheet`: vistas de exposicion
+- `appsheet`: vistas de exposición
 
 ### AppSheet
 
 Uso previsto:
 
 - alta de pre-solicitudes por profesorado
-- revision y decision por direccion
-- mantenimiento basico de calendario y configuracion por administracion
+- revisión y decisión por dirección
+- mantenimiento básico de calendario y configuración por administración
 - consulta de estado y trazabilidad resumida
 
-Estrategia tecnica del MVP:
+Estrategia técnica del MVP:
 
 - escribir directamente sobre tablas base en operaciones simples
-- reservar vistas para joins, paneles y lectura
-- editar tambien la configuracion simple sobre su tabla base `config.parametro_sistema`
+- reservar vistas para *joins*, paneles y lectura
+- editar también la configuración simple sobre su tabla base `config.parametro_sistema`
 
-Limites deliberados:
+Límites deliberados:
 
-- no se confia en AppSheet para reglas criticas
+- no se confía en AppSheet para reglas críticas
 - no se guardan secretos funcionales en AppSheet
-- no se habilitan adjuntos hasta definir politica de seguridad
+- no se habilitan adjuntos hasta definir política de seguridad
 
 ### n8n
 
 Uso futuro:
 
 - avisos y recordatorios
-- sincronizacion con Google Calendar
+- sincronización con Google Calendar
 - registro de importaciones de exportes
-- procesos idempotentes de conciliacion
+- procesos idempotentes de conciliación
 
 ### Integraciones externas
 
 - Google Calendar: salida controlada de eventos autorizados
-- Seneca: solo conciliacion manual o semimanual, sin automatizacion robotizada en esta fase
+- Séneca: solo conciliación manual o semimanual, sin automatización robotizada en esta fase
 
 ## Flujo principal
 
 1. Un docente crea una pre-solicitud.
 2. La solicitud pasa de `borrador` a `enviada`.
-3. Automatizacion o direccion la clasifica como `validada_automatica` o `requiere_revision`.
-4. Direccion decide si pide subsanacion, autoriza para Seneca o deniega.
-5. Administracion registra la presentacion en Seneca cuando proceda.
-6. La solicitud termina en `aceptada`, `denegada`, `cerrada` o `cancelada`.
+3. Automatización o dirección la clasifica como `validada_automatica` o `requiere_revision`.
+4. Dirección decide si pide subsanación, autoriza para Séneca o deniega.
+5. Administración registra la presentación en Séneca cuando proceda.
+6. La solicitud se resuelve en `aceptada` o `denegada`.
+7. La solicitud se cierra en `cerrada` o termina anticipadamente en `cancelada`.
 
-## Maquina de estados
+## Máquina de estados
 
 Estados base:
 
@@ -103,21 +104,19 @@ Las transiciones permitidas se guardan en tabla, no embebidas en AppSheet.
 
 Estados terminales:
 
-- `aceptada`
-- `denegada`
 - `cerrada`
 - `cancelada`
 
 ## Seguridad de arquitectura
 
-- Roles separados para propietario, AppSheet, automatizacion y solo lectura.
-- Permisos de AppSheet sobre tablas base concretas y vistas de apoyo minimas.
-- Auditoria de cambios de configuracion y de estado.
+- Roles separados para propietario, AppSheet, automatización y solo lectura.
+- Permisos de AppSheet sobre tablas base concretas y vistas de apoyo mínimas.
+- Auditoría de cambios de configuración y de estado.
 - Registro de importaciones futuras.
-- Configuracion funcional en tabla propia.
+- Configuración funcional en tabla propia.
 - Secretos fuera de la base de datos operativa.
 
 ## Decisiones aplazadas
 
 - TODO: decidir si conviene una API intermedia propia antes de activar acciones sensibles desde AppSheet.
-- TODO: decidir si el desempate por letra debe resolverse en SQL, en proceso de revision o en automatizacion externa.
+- TODO: decidir si el desempate por letra debe resolverse en SQL, en proceso de revisión o en automatización externa.

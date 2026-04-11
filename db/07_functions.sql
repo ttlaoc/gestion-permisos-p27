@@ -389,7 +389,7 @@ RETURNS BOOLEAN
 LANGUAGE sql
 IMMUTABLE
 AS $$
-    SELECT p_estado IN ('aceptada', 'denegada', 'cerrada', 'cancelada');
+    SELECT p_estado IN ('cerrada', 'cancelada');
 $$;
 
 CREATE OR REPLACE FUNCTION core.fn_bloquear_edicion_solicitud_final()
@@ -446,9 +446,12 @@ BEGIN
         WHERE etp.estado_origen = OLD.estado_actual
           AND etp.estado_destino = NEW.estado_actual
           AND etp.activa = TRUE
-          AND (v_actor_rol IS NULL OR etp.rol_requerido = v_actor_rol)
+          AND (
+              etp.rol_requerido IS NULL
+              OR etp.rol_requerido = v_actor_rol
+          )
     ) THEN
-        RAISE EXCEPTION 'Transicion de estado no permitida: % -> %',
+        RAISE EXCEPTION 'Transici?n de estado no permitida: % -> %',
             OLD.estado_actual, NEW.estado_actual
             USING ERRCODE = '23514';
     END IF;

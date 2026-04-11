@@ -1,49 +1,49 @@
-# Diseno funcional
+﻿# Diseño funcional
 
 ## Objetivo
 
-Cubrir el circuito interno previo a Seneca para solicitudes P.27 durante periodo lectivo.
+Cubrir el circuito interno previo a Séneca para solicitudes P.27 durante período lectivo.
 
 ## Actores
 
 - Profesorado: crea y corrige pre-solicitudes.
-- Direccion: revisa, valida, autoriza, deniega o marca incidencias.
-- Administracion: mantiene configuracion, calendario y registro interno de presentacion en Seneca.
+- Dirección: revisa, valida, autoriza, deniega o marca incidencias.
+- Administración: mantiene configuración, calendario y registro interno de presentación en Séneca.
 
-## Flujo funcional minimo
+## Flujo funcional mínimo
 
 1. El docente crea la pre-solicitud.
-2. El sistema calcula dias habiles y marca revision manual cuando corresponda.
-3. Direccion revisa la solicitud.
-4. Direccion puede:
-   - pedir subsanacion
-   - validar internamente
-   - autorizar
+2. El sistema calcula días hábiles y marca revisión manual cuando corresponda.
+3. Dirección revisa la solicitud.
+4. Dirección puede:
+   - pedir subsanación
+   - clasificar para validación automática o revisión manual
+   - autorizar para Séneca
    - denegar
-   - marcar incidencia
-5. Administracion registra si la solicitud se ha presentado oficialmente en Seneca.
-6. La solicitud se cierra cuando termina el circuito interno.
+   - registrar incidencia
+5. Administración registra si la solicitud se ha presentado oficialmente en Séneca.
+6. La solicitud se resuelve y se cierra cuando termina el circuito interno.
 
 ## Casos de uso MVP
 
 - alta de solicitud
 - consulta de estado por el docente
-- revision de solicitudes pendientes por direccion
+- revisión de solicitudes pendientes por dirección
 - mantenimiento del calendario no lectivo
-- mantenimiento de parametros del sistema
+- mantenimiento de parámetros del sistema
 - registro de incidencias y observaciones
-- consulta de historico de estados
+- consulta de histórico de estados
 
 ## Reglas visibles para usuarios
 
 - una solicitud P.27 siempre empieza como pre-solicitud interna
-- el sistema puede marcar la solicitud para revision manual
-- la autorizacion interna no equivale a presentacion oficial en Seneca
-- el calendario no lectivo afecta al computo de dias habiles
+- el sistema puede marcar la solicitud para revisión manual
+- la autorización interna no equivale a presentación oficial en Séneca
+- el calendario no lectivo afecta al cómputo de días hábiles
 
 ## Fuera de alcance de esta fase
 
 - subida de adjuntos
 - firma digital
-- notificaciones automaticas complejas
-- sincronizacion automatica con Seneca
+- notificaciones automáticas complejas
+- sincronización automática con Séneca

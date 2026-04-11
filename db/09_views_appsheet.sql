@@ -43,9 +43,9 @@ FROM core.solicitud s
 JOIN core.docente d ON d.docente_id = s.docente_id;
 
 COMMENT ON VIEW appsheet.vw_parametros_editables IS
-'Vista de solo lectura para AppSheet: lista parametros marcados como editables y sirve de apoyo visual o panel administrativo.';
+'Vista de solo lectura para AppSheet: lista parámetros marcados como editables y sirve de apoyo visual o panel administrativo.';
 
 COMMENT ON VIEW appsheet.vw_revision_solicitudes IS
-'Vista de solo lectura para AppSheet orientada a revision y paneles; no debe usarse para escritura.';
+'Vista de solo lectura para AppSheet orientada a revisión y paneles; no debe usarse para escritura.';
 
 COMMIT;

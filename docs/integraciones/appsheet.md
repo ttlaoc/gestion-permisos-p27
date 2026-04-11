@@ -1,113 +1,376 @@
-# Guia de conexion con AppSheet
+﻿# Guía de conexión con AppSheet
 
-## Estrategia recomendada para el MVP
+## Objetivo del MVP
 
-AppSheet no debe apoyarse en una arquitectura fragil basada en editar vistas de forma implicita.
+Montar una app funcional sin backend intermedio:
 
-La estrategia elegida es:
+- AppSheet escribe sobre tablas base.
+- PostgreSQL valida estados y reglas críticas.
+- Las vistas se usan solo para consulta, paneles y apoyo visual.
 
-- editar tablas base cuando la escritura es simple, directa y segura
-- usar vistas principalmente para lectura, joins, paneles y apoyo visual
-- no usar vistas como punto de escritura del MVP
+## Principio general de modelado
+
+- **Escritura**: siempre que la operación sea simple y segura, sobre tabla base.
+- **Lectura**: usar vistas para paneles, uniones y cuadros de revisión.
+- **Autoridad funcional**: la base de datos valida transiciones, cálculos y restricciones.
+- **AppSheet no sustituye la lógica crítica**: solo guía la captura y la operación diaria.
 
 ## Objetos a conectar
 
-### Edicion directa sobre tablas base
+### Tablas editables
 
-- `config.parametro_sistema`
-- `core.docente`
 - `core.solicitud`
+- `core.docente`
 - `core.calendario_no_lectivo`
 - `core.incidencia_solicitud`
+- `config.parametro_sistema`
 
-### Vistas de AppSheet
+### Vistas de solo lectura
 
-- `appsheet.vw_parametros_editables` - solo lectura
-- `appsheet.vw_revision_solicitudes` - solo lectura
+- `appsheet.vw_revision_solicitudes`
+- `appsheet.vw_parametros_editables`
 
-## Clasificacion de las vistas revisadas
+## Configuración general recomendada en AppSheet
 
-| Vista | Decision | Motivo |
+### Nombres visibles sugeridos
+
+| Objeto | Nombre visible recomendado |
+|---|---|
+| `core.solicitud` | Solicitudes |
+| `core.docente` | Docentes |
+| `core.calendario_no_lectivo` | Calendario no lectivo |
+| `core.incidencia_solicitud` | Incidencias |
+| `config.parametro_sistema` | Parámetros del sistema |
+| `appsheet.vw_revision_solicitudes` | Panel de revisión |
+| `appsheet.vw_parametros_editables` | Panel de parámetros |
+
+### Claves y etiquetas recomendadas
+
+| Objeto | Clave | Label |
 |---|---|---|
-| `appsheet.vw_docentes` | eliminada | duplicaba `core.docente` sin aportar control adicional; la edicion es simple sobre tabla base |
-| `appsheet.vw_solicitudes` | eliminada | duplicaba `core.solicitud`; la logica critica ya vive en triggers y funciones sobre la tabla base |
-| `appsheet.vw_calendario_no_lectivo` | eliminada | mantenimiento simple y seguro directamente sobre `core.calendario_no_lectivo` |
-| `appsheet.vw_incidencias` | eliminada | entidad operativa simple; conviene editar `core.incidencia_solicitud` |
-| `appsheet.vw_parametros_editables` | solo lectura | filtra `editable = true` y sirve como apoyo visual o panel administrativo |
-| `appsheet.vw_revision_solicitudes` | solo lectura | join de apoyo visual para revision; no debe utilizarse para escritura |
+| `core.solicitud` | `solicitud_id` | `codigo` |
+| `core.docente` | `docente_id` | `codigo_interno` |
+| `core.calendario_no_lectivo` | `calendario_no_lectivo_id` | `descripcion` |
+| `core.incidencia_solicitud` | `incidencia_id` | `descripcion` |
+| `config.parametro_sistema` | `parametro_id` | `clave` |
+| `appsheet.vw_revision_solicitudes` | `solicitud_id` | `codigo` |
+| `appsheet.vw_parametros_editables` | `parametro_id` | `clave` |
 
-## Recomendacion por rol
+## Configuración práctica por tabla
 
-- profesorado: acceso a sus solicitudes y lectura de catalogos necesarios
-- direccion: acceso a revision, incidencias y decisiones
-- administracion: acceso a parametros, calendario y marcaje de Seneca
+### `core.solicitud`
 
-## Estados por rol en AppSheet
+- clave primaria: `solicitud_id`
+- label recomendado: `codigo`
+- usuarios:
+  - profesorado
+  - dirección
+  - administración
 
-Estados asignables por profesorado:
+#### Campos editables por profesorado
+
+- `docente_id`
+- `fecha_inicio`
+- `fecha_fin`
+- `motivo`
+- `observaciones_docente`
+- `estado_actual` solo en acciones controladas (`borrador`, `enviada`, `cancelada`)
+
+#### Campos editables por dirección
+
+- `estado_actual`
+- `observaciones_direccion`
+- `revisada_por_usuario_id`
+
+#### Campos editables por administración
+
+- `estado_actual`
+- `presentada_en_seneca`
+- `fecha_presentacion_seneca`
+- `referencia_seneca`
+
+#### Campos solo lectura
+
+- `codigo`
+- `dias_habiles_solicitados`
+- `es_consecutiva_real`
+- `requiere_revision_manual`
+- `version_registro`
+- `creada_en`
+- `actualizada_en`
+
+#### Nombres visibles recomendados de columnas
+
+| Columna | Nombre visible |
+|---|---|
+| `codigo` | Código |
+| `docente_id` | Docente |
+| `fecha_solicitud` | Fecha de solicitud |
+| `fecha_inicio` | Inicio |
+| `fecha_fin` | Fin |
+| `motivo` | Motivo |
+| `observaciones_docente` | Observaciones del profesorado |
+| `observaciones_direccion` | Observaciones de dirección |
+| `estado_actual` | Estado |
+| `dias_habiles_solicitados` | Días hábiles solicitados |
+| `es_consecutiva_real` | Consecutividad real |
+| `requiere_revision_manual` | Requiere revisión manual |
+| `presentada_en_seneca` | Presentada en Séneca |
+| `fecha_presentacion_seneca` | Fecha de presentación en Séneca |
+| `referencia_seneca` | Referencia de Séneca |
+
+### `core.docente`
+
+- clave primaria: `docente_id`
+- label recomendado: `codigo_interno`
+- usuarios:
+  - dirección
+  - administración
+- campos editables:
+  - `codigo_interno`
+  - `nombre`
+  - `apellido_1`
+  - `apellido_2`
+  - `email_centro`
+  - `departamento`
+  - `activo`
+  - `inicial_desempate`
+  - `observaciones`
+- campos solo lectura:
+  - `docente_id`
+  - `creado_en`
+  - `actualizado_en`
+
+### `core.calendario_no_lectivo`
+
+- clave primaria: `calendario_no_lectivo_id`
+- label recomendado: `descripcion`
+- usuarios:
+  - administración
+  - dirección
+- campos editables:
+  - `fecha`
+  - `descripcion`
+  - `ambito`
+  - `es_festivo`
+  - `es_no_lectivo`
+  - `origen`
+- campos solo lectura:
+  - `calendario_no_lectivo_id`
+  - `creado_en`
+  - `actualizado_en`
+
+### `core.incidencia_solicitud`
+
+- clave primaria: `incidencia_id`
+- label recomendado: `descripcion`
+- usuarios:
+  - dirección
+  - administración
+- campos editables:
+  - `solicitud_id`
+  - `tipo_incidencia`
+  - `severidad`
+  - `descripcion`
+  - `abierta`
+  - `detectada_por_usuario_id`
+  - `resuelta_por_usuario_id`
+  - `resuelta_en`
+- campos solo lectura:
+  - `incidencia_id`
+  - `creada_en`
+  - `actualizada_en`
+
+### `config.parametro_sistema`
+
+- clave primaria: `parametro_id`
+- label recomendado: `clave`
+- usuarios:
+  - administración
+  - dirección
+- campos editables:
+  - `tipo_valor`
+  - `valor_texto`
+- campos solo lectura:
+  - `clave`
+  - `categoria`
+  - `descripcion`
+  - `editable`
+  - `version`
+  - `actualizado_en`
+  - `creado_en`
+
+#### Nombres visibles recomendados de columnas
+
+| Columna | Nombre visible |
+|---|---|
+| `clave` | Clave |
+| `categoria` | Categoría |
+| `descripcion` | Descripción |
+| `tipo_valor` | Tipo de valor |
+| `valor_texto` | Valor |
+| `editable` | Editable |
+| `version` | Versión |
+| `actualizado_en` | Actualizado el |
+
+## Vista de revisión recomendada
+
+### `appsheet.vw_revision_solicitudes`
+
+- uso: panel de dirección
+- clave recomendada: `solicitud_id`
+- label recomendado: `codigo`
+- solo lectura
+- columnas útiles para panel o dashboard:
+  - `docente_codigo`
+  - `nombre`
+  - `apellido_1`
+  - `departamento`
+  - `fecha_inicio`
+  - `fecha_fin`
+  - `dias_habiles_solicitados`
+  - `estado_actual`
+  - `es_consecutiva_real`
+  - `requiere_revision_manual`
+  - `presentada_en_seneca`
+
+## Enum recomendado para `core.solicitud.estado_actual`
+
+### Valores técnicos estables
 
 - `borrador`
 - `enviada`
-- `cancelada`
-
-Estados asignables por direccion:
-
 - `validada_automatica`
 - `requiere_revision`
 - `pendiente_subsanacion`
 - `autorizada_para_seneca`
-- `denegada`
-
-Estados asignables por administracion:
-
 - `presentada_en_seneca`
 - `aceptada`
 - `denegada`
 - `cerrada`
+- `cancelada`
 
-Estados preferiblemente asignados por automatizacion:
+### Etiquetas visibles recomendadas
 
-- `validada_automatica`
-- `requiere_revision`
+| Valor técnico | Etiqueta visible |
+|---|---|
+| `borrador` | Borrador |
+| `enviada` | Enviada |
+| `validada_automatica` | Validada automáticamente |
+| `requiere_revision` | Requiere revisión |
+| `pendiente_subsanacion` | Pendiente de subsanación |
+| `autorizada_para_seneca` | Autorizada para Séneca |
+| `presentada_en_seneca` | Presentada en Séneca |
+| `aceptada` | Aceptada |
+| `denegada` | Denegada |
+| `cerrada` | Cerrada |
+| `cancelada` | Cancelada |
 
-Notas:
+## Estados por perfil
 
-- AppSheet debe limitar las opciones visibles por rol con slices o valid if
-- la base de datos sigue siendo quien decide si una transicion es valida o no
-- `vw_revision_solicitudes` es la vista recomendada para paneles de direccion
+### Profesorado
 
-## Recomendaciones tecnicas
+- puede crear en `borrador`
+- puede pasar a `enviada`
+- puede cancelar en `borrador`, `enviada` o `pendiente_subsanacion`
+- puede reenviar desde `pendiente_subsanacion` a `enviada`
+
+### Dirección
+
+- clasifica en `validada_automatica` o `requiere_revision`
+- revisa y decide:
+  - `pendiente_subsanacion`
+  - `autorizada_para_seneca`
+  - `denegada`
+- puede cerrar expedientes ya `denegada`
+
+### Administración
+
+- registra `presentada_en_seneca`
+- resuelve en `aceptada` o `denegada`
+- cierra expedientes `aceptada` o `denegada`
+
+## Slices recomendados
+
+### Profesorado
+
+- **Mis solicitudes**: listado general del docente autenticado.
+- **Borradores**: registros en `borrador`.
+- **Pendientes de subsanación**: registros en `pendiente_subsanacion`.
+- **Histórico personal**: solicitudes `aceptada`, `denegada`, `cerrada` o `cancelada`.
+
+### Dirección
+
+- **Pendientes de clasificación**: `estado_actual = enviada`.
+- **Pendientes de revisión**: `estado_actual = requiere_revision`.
+- **Pendientes de subsanación**: `estado_actual = pendiente_subsanacion`.
+- **Autorizadas para Séneca**: `estado_actual = autorizada_para_seneca`.
+- **Panel de revisión**: `appsheet.vw_revision_solicitudes`.
+
+### Administración
+
+- **Pendientes de presentación**: `estado_actual = autorizada_para_seneca`.
+- **Presentadas**: `estado_actual = presentada_en_seneca`.
+- **Pendientes de cierre**: `estado_actual IN (aceptada, denegada)`.
+- **Calendario no lectivo**.
+- **Parámetros del sistema**.
+
+## Filtros recomendados
+
+### Profesorado
+
+- *security filter* por correo del usuario autenticado.
+- mostrar solo solicitudes del `docente_id` asociado a su `email_centro`.
+
+### Dirección y administración
+
+- acceso a todas las solicitudes.
+- usar *slices* por estado para simplificar la operación.
+
+## Formularios y vistas recomendadas
+
+### Profesorado
+
+- formulario **Nueva solicitud**
+- formulario **Editar borrador**
+- detalle **Estado de mi solicitud**
+
+### Dirección
+
+- vista de tabla **Pendientes de clasificación**
+- vista de tabla **Pendientes de revisión**
+- detalle **Revisión de solicitud**
+
+### Administración
+
+- vista de tabla **Pendientes de presentación**
+- detalle **Registro en Séneca**
+- vista de tabla **Pendientes de cierre**
+
+## Flujo funcional paso a paso
+
+1. profesorado crea la solicitud en `borrador`
+2. profesorado la envía a `enviada`
+3. automatización o dirección la clasifica:
+   - `validada_automatica`
+   - `requiere_revision`
+4. dirección revisa:
+   - pide cambios con `pendiente_subsanacion`
+   - autoriza con `autorizada_para_seneca`
+   - o deniega con `denegada`
+5. profesorado subsana y reenvía a `enviada`
+6. administración registra `presentada_en_seneca`
+7. administración resuelve:
+   - `aceptada`
+   - `denegada`
+8. dirección o administración cierra el expediente en `cerrada`
+
+## Recomendaciones técnicas
 
 - usar una cuenta de base de datos dedicada a AppSheet
-- limitar permisos a tablas y vistas previstas
-- aplicar security filters por email y rol
-- no confiar solo en la ocultacion de columnas
-- usar validaciones de AppSheet como apoyo, no como control principal
-
-## Columnas clave
-
-- `solicitud_id` como key tecnica
-- `codigo` como identificador visible
-- `version_registro` para refresco y deteccion de cambios
-- `requiere_revision_manual` para paneles de direccion
-- `valor_texto` y `tipo_valor` para administracion simple de parametros
-
-## Configuracion editable
-
-Para el MVP se ha sustituido el uso directo de `valor_json` por un modelo mas simple en `config.parametro_sistema`:
-
-- `tipo_valor`: `numero`, `booleano`, `texto` o `fecha`
-- `valor_texto`: valor editable desde AppSheet
-
-La base de datos convierte internamente ese valor a JSONB cuando hace falta para funciones de lectura tecnica y auditoria. Con esto:
-
-- AppSheet evita editar JSON manualmente
-- la configuracion sigue siendo tipada
-- la auditoria conserva un formato normalizado
-
-## Advertencias
-
-- `vw_revision_solicitudes` es expresamente de solo lectura
-- `vw_parametros_editables` tambien es de solo lectura; la edicion real de configuracion se hace sobre `config.parametro_sistema`
-- si AppSheet necesita escritura compleja, valorar backend intermedio
-- no habilitar adjuntos hasta cerrar la politica de seguridad
+- usar *slices* por perfil y por fase del flujo
+- configurar `Valid_If` del estado según rol y estado actual
+- usar nombres visibles claros para tablas y columnas
+- ocultar en formularios los campos derivados y de auditoría
+- no confiar en AppSheet para validar transiciones; la base de datos es la autoridad
+- no habilitar adjuntos en esta fase

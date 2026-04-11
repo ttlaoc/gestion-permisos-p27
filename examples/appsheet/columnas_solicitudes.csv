@@ -1,18 +1,18 @@
-columna,tipo_sugerido_appsheet,editable,comentario
-solicitud_id,Text,No,Key tecnica UUID
-codigo,Text,No,Identificador visible
-docente_id,Ref,Si,Referencia a docente
-fecha_solicitud,Date,No,Fecha de alta
-fecha_inicio,Date,Si,Inicio del permiso
-fecha_fin,Date,Si,Fin del permiso
-motivo,LongText,Si,Descripcion breve
-observaciones_docente,LongText,Si,Comentarios del docente
-observaciones_direccion,LongText,Si,Comentarios de revision
-estado_actual,Enum,Si,Controlar segun rol y accion con lista dependiente del estado y del rol
-dias_habiles_solicitados,Number,No,Calculado en SQL
-es_consecutiva_real,Yes/No,No,Calculado en SQL
-requiere_revision_manual,Yes/No,No,Calculado en SQL
-presentada_en_seneca,Yes/No,Si,Solo administracion
-fecha_presentacion_seneca,Date,Si,Solo administracion
-referencia_seneca,Text,Si,Solo administracion
-version_registro,Number,No,Control tecnico
+﻿columna,tipo_sugerido_appsheet,editable,comentario,nombre_visible_sugerido
+solicitud_id,Text,No,Clave técnica UUID,ID de solicitud
+codigo,Text,No,Identificador visible,Código
+docente_id,Ref,Si,Referencia a docente,Docente
+fecha_solicitud,Date,No,Fecha de alta,Fecha de solicitud
+fecha_inicio,Date,Si,Inicio del permiso,Fecha de inicio
+fecha_fin,Date,Si,Fin del permiso,Fecha de fin
+motivo,LongText,Si,Descripción breve,Motivo
+observaciones_docente,LongText,Si,Comentarios del docente,Observaciones del profesorado
+observaciones_direccion,LongText,Si,Comentarios de revisión,Observaciones de dirección
+estado_actual,Enum,Si,Controlar según rol y acción con lista dependiente del estado y del rol,Estado
+dias_habiles_solicitados,Number,No,Calculado en SQL,Días hábiles solicitados
+es_consecutiva_real,Yes/No,No,Calculado en SQL,Consecutividad real
+requiere_revision_manual,Yes/No,No,Calculado en SQL,Requiere revisión manual
+presentada_en_seneca,Yes/No,Si,Solo administración,Presentada en Séneca
+fecha_presentacion_seneca,Date,Si,Solo administración,Fecha de presentación en Séneca
+referencia_seneca,Text,Si,Solo administración,Referencia de Séneca
+version_registro,Number,No,Control técnico,Versión

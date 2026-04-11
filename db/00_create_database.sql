@@ -1,5 +1,5 @@
--- Ejecutar con un usuario con privilegios de creacion de base de datos.
--- Ajustar propietario y locale segun el entorno real.
+-- Ejecutar con un usuario con privilegios de creación de base de datos.
+-- Ajustar propietario y locale según el entorno real.
 
 CREATE DATABASE gestion_permisos_p27
     WITH
@@ -8,4 +8,4 @@ CREATE DATABASE gestion_permisos_p27
     TEMPLATE = template0;
 
 COMMENT ON DATABASE gestion_permisos_p27 IS
-'Sistema interno de gestion de permisos P.27 previo a Seneca.';
+'Sistema interno de gestión de permisos P.27 previo a Séneca.';

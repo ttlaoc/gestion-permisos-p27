@@ -1,8 +1,8 @@
-# Diseno tecnico
+﻿# Diseño técnico
 
 ## Resumen
 
-El MVP es database-first. La prioridad es fijar un modelo estable y seguro antes de ampliar la capa de servicios.
+El MVP es *database-first*. La prioridad es fijar un modelo estable y seguro antes de ampliar la capa de servicios.
 
 ## Artefactos principales
 
@@ -13,33 +13,33 @@ El MVP es database-first. La prioridad es fijar un modelo estable y seguro antes
 - script PowerShell para aplicar el esquema
 - Docker Compose para entorno local
 
-## Razon de esta aproximacion
+## Razón de esta aproximación
 
-- reduce fragilidad inicial
+- reduce la fragilidad inicial
 - fuerza claridad del dominio
-- acelera conexion con AppSheet
-- deja un backend propio como decision evolutiva, no prematura
+- acelera la conexión con AppSheet
+- deja un backend propio como decisión evolutiva, no prematura
 
 ## Convenciones
 
 - esquemas por responsabilidad
-- nombres tecnicos en singular para tablas de negocio
-- claves primarias tecnicas con UUID o identidad segun el caso
+- nombres técnicos en singular para tablas de negocio
+- claves primarias técnicas con UUID o identidad según el caso
 - claves visibles como `codigo` cuando haya valor operativo
-- auditoria en tablas separadas
+- auditoría en tablas separadas
 
-## Consideraciones AppSheet
+## Consideraciones sobre AppSheet
 
-- editar tablas base cuando la operacion sea simple y segura
-- usar vistas solo para lectura, joins y paneles
-- editar `config.parametro_sistema` directamente para evitar ambiguedad y no depender de vistas escribibles
-- evitar logica compleja en formulas si ya existe en SQL
+- editar tablas base cuando la operación sea simple y segura
+- usar vistas solo para lectura, *joins* y paneles
+- editar `config.parametro_sistema` directamente para evitar ambigüedad y no depender de vistas escribibles
+- evitar lógica compleja en fórmulas si ya existe en SQL
 - usar `version_registro` para ayudar a detectar concurrencia y refresco
-- aplicar security filters y slices por rol
+- aplicar *security filters* y *slices* por rol
 
-## Maquina de estados de solicitudes
+## Máquina de estados de solicitudes
 
-La logica critica del estado vive en PostgreSQL mediante:
+La lógica crítica del estado vive en PostgreSQL mediante:
 
 - `core.estado_solicitud_enum`
 - `core.estado_transicion_permitida`
@@ -53,28 +53,40 @@ Flujo base del MVP:
 
 | Fase | Estados |
 |---|---|
-| Preparacion | `borrador`, `enviada` |
-| Clasificacion inicial | `validada_automatica`, `requiere_revision` |
-| Revision humana | `pendiente_subsanacion`, `autorizada_para_seneca`, `denegada` |
-| Tramite oficial | `presentada_en_seneca` |
-| Cierre | `aceptada`, `denegada`, `cerrada`, `cancelada` |
+| Preparación | `borrador`, `enviada` |
+| Clasificación inicial | `validada_automatica`, `requiere_revision` |
+| Revisión humana | `pendiente_subsanacion`, `autorizada_para_seneca`, `denegada` |
+| Trámite oficial | `presentada_en_seneca` |
+| Resolución | `aceptada`, `denegada` |
+| Cierre | `cerrada`, `cancelada` |
 
-Controles minimos implementados:
+Controles mínimos implementados:
 
-- no hay cambios a estados no definidos por enum
+- no hay cambios a estados no definidos por el *enum*
 - no hay transiciones fuera de la tabla de transiciones
 - `presentada_en_seneca` solo puede venir de `autorizada_para_seneca`
 - `aceptada` y `denegada` solo pueden venir de `presentada_en_seneca`
-- una solicitud en estado terminal no admite mas cambios
-- todo cambio de estado se registra automaticamente en auditoria
+- `cerrada` y `cancelada` bloquean cualquier edición posterior
+- todo cambio de estado se registra automáticamente en auditoría
 
-## Consideraciones n8n
+## Flujo funcional resumido
+
+1. profesorado crea en `borrador`
+2. profesorado envía a `enviada`
+3. automatización o dirección clasifica en `validada_automatica` o `requiere_revision`
+4. dirección revisa y puede mover a `pendiente_subsanacion`, `autorizada_para_seneca` o `denegada`
+5. profesorado subsana y vuelve a `enviada` cuando procede
+6. administración registra `presentada_en_seneca`
+7. administración resuelve en `aceptada` o `denegada`
+8. dirección o administración cierra en `cerrada`
+
+## Consideraciones sobre n8n
 
 - flujos idempotentes
 - registro de importaciones en `integration.carga_externa`
 - cuentas de servicio con rol limitado
-- no escribir sobre Seneca
+- no escribir sobre Séneca
 
-## Decision pendiente
+## Decisión pendiente
 
-- TODO: decidir si fase 2 exige backend intermedio para acciones sensibles.
+- TODO: decidir si la fase 2 exige un backend intermedio para acciones sensibles.

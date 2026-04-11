@@ -212,12 +212,12 @@ GRANT UPDATE (
     resuelta_en
 ) ON core.incidencia_solicitud TO gp27_appsheet;
 
--- `vw_parametros_editables` queda solo para lectura; la escritura de configuracion
+-- `vw_parametros_editables` queda solo para lectura; la escritura de configuración
 -- se realiza sobre `config.parametro_sistema` para evitar vistas editables en el MVP.
 GRANT SELECT ON appsheet.vw_parametros_editables TO gp27_appsheet;
 GRANT SELECT ON appsheet.vw_revision_solicitudes TO gp27_appsheet, gp27_readonly;
 
--- Automatizacion: sin escritura operativa en entidades de AppSheet.
+-- Automatización: sin escritura operativa en entidades de AppSheet.
 GRANT USAGE ON SCHEMA integration TO gp27_automation;
 GRANT SELECT, INSERT, UPDATE ON integration.carga_externa TO gp27_automation;
 GRANT SELECT ON appsheet.vw_revision_solicitudes TO gp27_automation;

@@ -1,4 +1,4 @@
-# Seguridad, amenazas y controles
+﻿# Seguridad, amenazas y controles
 
 ## Marco de referencia
 
@@ -7,7 +7,7 @@ Este proyecto toma como referencia:
 - OWASP ASVS
 - OWASP Cheat Sheet Series
 
-La seguridad se aplica de forma pragmatica y por capas.
+La seguridad se aplica de forma pragmática y por capas.
 
 ## Objetivos de seguridad
 
@@ -15,21 +15,21 @@ La seguridad se aplica de forma pragmatica y por capas.
 - evitar alteraciones no trazadas
 - reducir superficie de ataque en integraciones
 - garantizar control de acceso por rol y recurso
-- soportar investigacion forense basica ante incidencias
+- soportar investigación forense básica ante incidencias
 
 ## Amenazas principales
 
-### Inyeccion SQL
+### Inyección SQL
 
 Riesgo:
 
-- consultas construidas con concatenacion
+- consultas construidas con concatenación
 
 Controles:
 
 - consultas parametrizadas siempre
-- privilegios minimos por rol
-- restricciones y checks en SQL
+- privilegios mínimos por rol
+- restricciones y *checks* en SQL
 
 ### IDOR o BOLA
 
@@ -42,18 +42,18 @@ Controles:
 - filtrado por rol y por recurso en AppSheet o backend futuro
 - vistas acotadas
 - trazabilidad de cambios
-- recomendacion de security filters en AppSheet
+- recomendación de *security filters* en AppSheet
 
 ### XSS y salida insegura
 
 Riesgo:
 
-- textos libres mostrados despues en AppSheet u otros paneles
+- textos libres mostrados después en AppSheet u otros paneles
 
 Controles:
 
 - tratamiento de toda entrada como no confiable
-- escape y saneado en la capa de presentacion
+- escape y saneado en la capa de presentación
 - no renderizar HTML arbitrario
 
 ### CSRF
@@ -65,7 +65,7 @@ Riesgo:
 Controles:
 
 - aplicable a futuro si se incorpora backend HTTP
-- autenticacion fuerte y tokens anti-CSRF cuando corresponda
+- autenticación fuerte y tokens anti-CSRF cuando corresponda
 
 ### SSRF y abuso de integraciones
 
@@ -76,34 +76,34 @@ Riesgo:
 Controles:
 
 - no aceptar URLs arbitrarias en esta fase
-- allowlist y timeouts para futuras llamadas salientes
-- cuentas de servicio con permisos minimos
+- *allowlist* y *timeouts* para futuras llamadas salientes
+- cuentas de servicio con permisos mínimos
 
 ### Fuga de secretos
 
 Riesgo:
 
-- credenciales en repo, logs o tablas operativas
+- credenciales en el repositorio, *logs* o tablas operativas
 
 Controles:
 
 - secretos fuera del SQL versionado
 - uso de variables de entorno o gestor seguro
-- documentacion separada para configuracion funcional y credenciales
+- documentación separada para configuración funcional y credenciales
 
-### Logging inseguro
+### *Logging* inseguro
 
 Riesgo:
 
-- volcado de PII, tokens o documentos
+- volcado de PII, *tokens* o documentos
 
 Controles:
 
-- auditoria separada de logs operativos
+- auditoría separada de logs operativos
 - no registrar secretos
-- no almacenar documentos completos en historicos
+- no almacenar documentos completos en históricos
 
-### Manipulacion de estados
+### Manipulación de estados
 
 Riesgo:
 
@@ -112,46 +112,46 @@ Riesgo:
 Controles:
 
 - tabla de transiciones permitidas
-- trigger de validacion de transiciones
-- historial de estados en auditoria
+- trigger de validación de transiciones
+- historial de estados en auditoría
 
 ## Controles implementados en el MVP
 
-- separacion por esquemas
-- checks y unicos
-- indices para acceso y auditoria
-- historico de configuracion
-- historico de cambios y estados de solicitudes
-- calculos de negocio criticos en funciones SQL
-- roles de base de datos con minimo privilegio
-- AppSheet con permisos sobre tablas base concretas y vistas minimas de apoyo
+- separación por esquemas
+- *checks* y únicos
+- índices para acceso y auditoría
+- histórico de configuración
+- histórico de cambios y estados de solicitudes
+- cálculos de negocio críticos en funciones SQL
+- roles de base de datos con mínimo privilegio
+- AppSheet con permisos sobre tablas base concretas y vistas mínimas de apoyo
 - registro de futuras importaciones externas
 
 ## Controles operativos recomendados
 
 - TLS obligatorio hacia PostgreSQL en entornos no locales
-- rotacion de credenciales de servicio
+- rotación de credenciales de servicio
 - copias de seguridad cifradas
-- politica de retencion de auditoria
-- revision periodica de permisos AppSheet y n8n
+- política de retención de auditoría
+- revisión periódica de permisos AppSheet y n8n
 - cuentas separadas por entorno
 
-## Controles no activados aun
+## Controles no activados aún
 
 - antivirus o escaneo de adjuntos
 - SSO corporativo
-- backend HTTP con autenticacion propia
+- backend HTTP con autenticación propia
 - RLS por fila en PostgreSQL
 
-## Decisiones y limites
+## Decisiones y límites
 
 - Se evita almacenar secretos en `config.parametro_sistema`.
 - Se aplaza la subida de ficheros hasta definir controles completos.
-- Se aplaza cualquier automatizacion de escritura sobre Seneca.
+- Se aplaza cualquier automatización de escritura sobre Séneca.
 - En el MVP no se admite escritura sobre vistas AppSheet; la escritura se hace sobre tablas base con permisos acotados.
 
 ## TODO
 
-- Definir si la fase 2 usara RLS ademas de filtros AppSheet.
-- Definir politica de retencion de datos personales.
-- Definir catalogo final de eventos auditables para administracion sensible.
+- Definir si la fase 2 usará RLS además de filtros AppSheet.
+- Definir política de retención de datos personales.
+- Definir catálogo final de eventos auditables para administración sensible.
