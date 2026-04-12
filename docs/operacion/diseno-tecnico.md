@@ -37,6 +37,18 @@ El MVP es *database-first*. La prioridad es fijar un modelo estable y seguro ant
 - usar `version_registro` para ayudar a detectar concurrencia y refresco
 - aplicar *security filters* y *slices* por rol
 
+## Auditoría de configuración
+
+La tabla `config.parametro_sistema` separa preparación de fila e histórico:
+
+- `audit.fn_preparar_parametro_sistema()` se ejecuta en `BEFORE INSERT OR UPDATE`
+- en `INSERT` completa metadatos sin escribir aún en tablas hijas
+- en `UPDATE` incrementa `version`, actualiza `actualizado_en` y `actualizado_por`
+- `audit.fn_registrar_historial_configuracion()` se ejecuta en `AFTER INSERT OR UPDATE`
+- el histórico en `audit.configuracion_historial` se inserta cuando la fila de configuración ya existe materialmente y la FK puede resolverse
+
+Con este diseño el valor inicial queda auditado en altas y cada modificación conserva versión, actor y trazabilidad sin desactivar restricciones.
+
 ## Máquina de estados de solicitudes
 
 La lógica crítica del estado vive en PostgreSQL mediante:

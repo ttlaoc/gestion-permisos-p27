@@ -2,8 +2,8 @@
 
 INSERT INTO config.parametro_sistema (clave, categoria, descripcion, tipo_valor, valor_texto, editable)
 VALUES
-    ('reglas.cupo_diario_permisos', 'reglas', 'Número máximo orientativo de permisos P.27 por día hábil.', 'numero', '2', TRUE),
-    ('reglas.max_dias_habiles_por_docente', 'reglas', 'Máximo anual orientativo de días hábiles P.27 por docente.', 'numero', '6', TRUE),
+    ('reglas.cupo_diario_permisos', 'reglas', 'Número máximo orientativo de permisos P.27 por día hábil.', 'numero', '5', TRUE),
+    ('reglas.max_dias_habiles_por_docente', 'reglas', 'Máximo anual orientativo de días hábiles P.27 por docente.', 'numero', '2', TRUE),
     ('reglas.revisar_consecutividad_real', 'reglas', 'Marca para revisión manual las solicitudes consecutivas en días hábiles reales.', 'booleano', 'true', TRUE),
     ('reglas.letra_desempate_inicio', 'reglas', 'Letra inicial para desempate de prioridad si la normativa interna lo requiere.', 'texto', 'M', TRUE),
     ('centro.nombre', 'centro', 'Nombre visible del centro.', 'texto', 'IES Demo P27', TRUE),

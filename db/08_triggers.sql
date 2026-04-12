@@ -20,10 +20,15 @@ BEFORE UPDATE ON core.incidencia_solicitud
 FOR EACH ROW
 EXECUTE FUNCTION audit.fn_set_timestamp();
 
-CREATE TRIGGER trg_parametro_sistema_auditar
+CREATE TRIGGER trg_parametro_sistema_preparar
 BEFORE INSERT OR UPDATE ON config.parametro_sistema
 FOR EACH ROW
-EXECUTE FUNCTION audit.fn_registrar_cambio_configuracion();
+EXECUTE FUNCTION audit.fn_preparar_parametro_sistema();
+
+CREATE TRIGGER trg_parametro_sistema_historial
+AFTER INSERT OR UPDATE ON config.parametro_sistema
+FOR EACH ROW
+EXECUTE FUNCTION audit.fn_registrar_historial_configuracion();
 
 CREATE TRIGGER trg_solicitud_derivados
 BEFORE INSERT OR UPDATE OF fecha_inicio, fecha_fin, docente_id ON core.solicitud

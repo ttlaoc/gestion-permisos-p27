@@ -1,11 +1,12 @@
 param(
-    [string]$HostName = "localhost",
-    [int]$Port = 5432,
+    [string]$ContainerName = "gestion-permisos-p27-db",
     [string]$Database = "gestion_permisos_p27",
-    [string]$User = "postgres"
+    [string]$User = "gp27_owner"
 )
 
 $ErrorActionPreference = "Stop"
+
+$repoRoot = Split-Path -Parent $PSScriptRoot
 
 $files = @(
     "db/01_extensions.sql",
@@ -22,8 +23,20 @@ $files = @(
 )
 
 foreach ($file in $files) {
-    Write-Host "Aplicando $file"
-    psql -h $HostName -p $Port -U $User -d $Database -v ON_ERROR_STOP=1 -f $file
+    $fullPath = Join-Path $repoRoot $file
+
+    if (-not (Test-Path $fullPath)) {
+        throw "No se encuentra el archivo: $fullPath"
+    }
+
+    Write-Host "Aplicando $file ..." -ForegroundColor Cyan
+
+    Get-Content $fullPath -Raw |
+    docker exec -i $ContainerName psql -U $User -d $Database -v ON_ERROR_STOP=1
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Error aplicando $file"
+    }
 }
 
-Write-Host "Esquema aplicado correctamente."
+Write-Host "Esquema aplicado correctamente." -ForegroundColor Green

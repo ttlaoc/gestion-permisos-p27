@@ -460,13 +460,32 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION audit.fn_registrar_cambio_configuracion()
+CREATE OR REPLACE FUNCTION audit.fn_preparar_parametro_sistema()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        NEW.actualizado_por := audit.fn_actor_usuario_id();
+        NEW.version := COALESCE(NEW.version, 1);
+        NEW.actualizado_en := COALESCE(NEW.actualizado_en, CURRENT_TIMESTAMP);
+        NEW.actualizado_por := COALESCE(NEW.actualizado_por, audit.fn_actor_usuario_id());
+        RETURN NEW;
+    END IF;
+
+    NEW.version := OLD.version + 1;
+    NEW.actualizado_por := audit.fn_actor_usuario_id();
+    NEW.actualizado_en := CURRENT_TIMESTAMP;
+
+    RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION audit.fn_registrar_historial_configuracion()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
         INSERT INTO audit.configuracion_historial (
             parametro_id,
             clave,
@@ -484,15 +503,12 @@ BEGIN
             NEW.version,
             NULL,
             core.fn_parametro_a_jsonb(NEW.tipo_valor, NEW.valor_texto),
-            audit.fn_actor_usuario_id(),
+            NEW.actualizado_por,
             audit.fn_origen_evento()
         );
+
         RETURN NEW;
     END IF;
-
-    NEW.version := OLD.version + 1;
-    NEW.actualizado_por := audit.fn_actor_usuario_id();
-    NEW.actualizado_en := CURRENT_TIMESTAMP;
 
     INSERT INTO audit.configuracion_historial (
         parametro_id,
@@ -511,7 +527,7 @@ BEGIN
         NEW.version,
         core.fn_parametro_a_jsonb(OLD.tipo_valor, OLD.valor_texto),
         core.fn_parametro_a_jsonb(NEW.tipo_valor, NEW.valor_texto),
-        audit.fn_actor_usuario_id(),
+        NEW.actualizado_por,
         audit.fn_origen_evento()
     );
 
