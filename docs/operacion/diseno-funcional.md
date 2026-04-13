@@ -1,49 +1,59 @@
-ï»¿# DiseÃ±o funcional
+# Diseño funcional
 
 ## Objetivo
 
-Cubrir el circuito interno previo a SÃ©neca para solicitudes P.27 durante perÃ­odo lectivo.
+Cubrir el circuito interno previo a Séneca para solicitudes P.27 durante período lectivo.
 
 ## Actores
 
 - Profesorado: crea y corrige pre-solicitudes.
-- DirecciÃ³n: revisa, valida, autoriza, deniega o marca incidencias.
-- AdministraciÃ³n: mantiene configuraciÃ³n, calendario y registro interno de presentaciÃ³n en SÃ©neca.
+- Dirección: revisa, valida, autoriza, deniega o marca incidencias.
+- Administración: mantiene configuración, calendario y registro interno de presentación en Séneca.
 
-## Flujo funcional mÃ­nimo
+## Flujo funcional mínimo
 
 1. El docente crea la pre-solicitud.
-2. El sistema calcula dÃ­as hÃ¡biles y marca revisiÃ³n manual cuando corresponda.
-3. DirecciÃ³n revisa la solicitud.
-4. DirecciÃ³n puede:
-   - pedir subsanaciÃ³n
-   - clasificar para validaciÃ³n automÃ¡tica o revisiÃ³n manual
-   - autorizar para SÃ©neca
+2. El sistema calcula días hábiles y marca revisión manual cuando corresponda.
+3. Dirección revisa la solicitud.
+4. Dirección puede:
+   - pedir subsanación
+   - clasificar para validación automática o revisión manual
+   - autorizar para Séneca
    - denegar
    - registrar incidencia
-5. AdministraciÃ³n registra si la solicitud se ha presentado oficialmente en SÃ©neca.
+5. Administración registra si la solicitud se ha presentado oficialmente en Séneca.
 6. La solicitud se resuelve y se cierra cuando termina el circuito interno.
 
 ## Casos de uso MVP
 
 - alta de solicitud
 - consulta de estado por el docente
-- revisiÃ³n de solicitudes pendientes por direcciÃ³n
+- revisión de solicitudes pendientes por dirección
 - mantenimiento del calendario no lectivo
-- mantenimiento de parÃ¡metros del sistema
+- mantenimiento de parámetros del sistema
 - registro de incidencias y observaciones
-- consulta de histÃ³rico de estados
+- consulta de histórico de estados
+
+## Operación prevista en AppSheet
+
+La app del MVP se organiza por tres espacios operativos:
+
+- profesorado: captura, envío, subsanación y consulta de sus solicitudes
+- dirección: revisión, incidencias, subsanación, autorización y cierre cuando proceda
+- administración: registro de presentación en Séneca, resolución y cierre
+
+La guía práctica de construcción de AppSheet, con tablas, slices, filtros, acciones y vistas, queda documentada en `docs/integraciones/appsheet.md`.
 
 ## Reglas visibles para usuarios
 
 - una solicitud P.27 siempre empieza como pre-solicitud interna
-- el sistema puede marcar la solicitud para revisiÃ³n manual
-- la autorizaciÃ³n interna no equivale a presentaciÃ³n oficial en SÃ©neca
-- el calendario no lectivo afecta al cÃ³mputo de dÃ­as hÃ¡biles
+- el sistema puede marcar la solicitud para revisión manual
+- la autorización interna no equivale a presentación oficial en Séneca
+- el calendario no lectivo afecta al cómputo de días hábiles
 
 ## Fuera de alcance de esta fase
 
 - subida de adjuntos
 - firma digital
-- notificaciones automÃ¡ticas complejas
-- sincronizaciÃ³n automÃ¡tica con SÃ©neca
+- notificaciones automáticas complejas
+- sincronización automática con Séneca

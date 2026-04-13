@@ -36,6 +36,18 @@ GRANT USAGE ON SCHEMA appsheet TO gp27_readonly;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA config, core TO gp27_appsheet;
 
 GRANT SELECT (
+    usuario_id,
+    email,
+    nombre_mostrar,
+    rol_principal,
+    activo,
+    proveedor_identidad,
+    referencia_externa,
+    creado_en,
+    actualizado_en
+) ON core.usuario TO gp27_appsheet;
+
+GRANT SELECT (
     parametro_id,
     clave,
     categoria,
